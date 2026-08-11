@@ -1,0 +1,20 @@
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:noJwt","message":"jwt filter","data":{"path":"/api/auth/status","hasJwt":false,"validJwt":false},"timestamp":1785915836309,"hypothesisId":"A,B,E"}
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:noJwt","message":"jwt filter","data":{"path":"/api/auth/status","hasJwt":false,"validJwt":false},"timestamp":1785915836480,"hypothesisId":"A,B,E"}
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:noJwt","message":"jwt filter","data":{"path":"/api/auth/exchange","hasJwt":false,"validJwt":false},"timestamp":1785915840751,"hypothesisId":"A,B,E"}
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:noJwt","message":"jwt filter","data":{"path":"/api/auth/status","hasJwt":false,"validJwt":false},"timestamp":1785915840760,"hypothesisId":"A,B,E"}
+{"sessionId":"2347af","location":"AuthController:exchange","message":"jwt cookie set","data":{"githubLogin":"AyushX-eng"},"timestamp":1785915840897,"hypothesisId":"A"}
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:authenticated","message":"jwt filter","data":{"path":"/api/auth/status","hasJwt":true,"validJwt":true},"timestamp":1785915840978,"hypothesisId":"A,B,E"}
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:authenticated","message":"jwt filter","data":{"path":"/api/v1/deploy","hasJwt":true,"validJwt":true},"timestamp":1785915877585,"hypothesisId":"A,B,E"}
+{"sessionId":"2347af","location":"DeploymentController","message":"deployStart","data":{"githubLogin":"AyushX-eng","authenticated":true},"timestamp":1785915878025,"hypothesisId":"D,E"}
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:authenticated","message":"jwt filter","data":{"path":"/api/auth/status","hasJwt":true,"validJwt":true},"timestamp":1785916735286,"hypothesisId":"A,B,E"}
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:authenticated","message":"jwt filter","data":{"path":"/api/auth/status","hasJwt":true,"validJwt":true},"timestamp":1785916735410,"hypothesisId":"A,B,E"}
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:authenticated","message":"jwt filter","data":{"path":"/api/auth/exchange","hasJwt":true,"validJwt":true},"timestamp":1785916738775,"hypothesisId":"A,B,E"}
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:authenticated","message":"jwt filter","data":{"path":"/api/auth/status","hasJwt":true,"validJwt":true},"timestamp":1785916738784,"hypothesisId":"A,B,E"}
+{"sessionId":"2347af","location":"AuthController:exchange","message":"jwt cookie set","data":{"githubLogin":"AyushX-eng"},"timestamp":1785916738826,"hypothesisId":"A"}
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:authenticated","message":"jwt filter","data":{"path":"/api/auth/status","hasJwt":true,"validJwt":true},"timestamp":1785916738880,"hypothesisId":"A,B,E"}
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:noJwt","message":"jwt filter","data":{"path":"/api/auth/status","hasJwt":false,"validJwt":false},"timestamp":1786259013401,"hypothesisId":"A,B,E"}
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:noJwt","message":"jwt filter","data":{"path":"/api/auth/status","hasJwt":false,"validJwt":false},"timestamp":1786259014239,"hypothesisId":"A,B,E"}
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:noJwt","message":"jwt filter","data":{"path":"/api/auth/status","hasJwt":false,"validJwt":false},"timestamp":1786259344817,"hypothesisId":"A,B,E"}
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:noJwt","message":"jwt filter","data":{"path":"/api/auth/status","hasJwt":false,"validJwt":false},"timestamp":1786259373897,"hypothesisId":"A,B,E"}
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:noJwt","message":"jwt filter","data":{"path":"/api/auth/status","hasJwt":false,"validJwt":false},"timestamp":1786259533645,"hypothesisId":"A,B,E"}
+{"sessionId":"2347af","location":"JwtAuthenticationFilter:noJwt","message":"jwt filter","data":{"path":"/api/auth/status","hasJwt":false,"validJwt":false},"timestamp":1786259533774,"hypothesisId":"A,B,E"}
