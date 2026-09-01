@@ -52,9 +52,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final ScheduledExecutorService cleanupExecutor = Executors.newSingleThreadScheduledExecutor();
 
     // Configurable frontend URL — set FRONTEND_URL env var for production
-    private static final String FRONTEND_URL = System.getenv("FRONTEND_URL") != null 
-            ? System.getenv("FRONTEND_URL") 
-            : "http://localhost:5173";
+    public static final String DEFAULT_FRONTEND_URL = "http://localhost:5173";
+    private static final String FRONTEND_URL = System.getenv("FRONTEND_URL") != null
+            && !System.getenv("FRONTEND_URL").isBlank()
+            ? System.getenv("FRONTEND_URL")
+            : DEFAULT_FRONTEND_URL;
 
     public OAuth2AuthenticationSuccessHandler(JwtService jwtService,
                                               OAuth2AuthorizedClientService authorizedClientService,

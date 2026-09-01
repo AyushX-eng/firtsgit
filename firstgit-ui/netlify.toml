@@ -9,6 +9,11 @@
   # Base directory for build (monorepo support)
   base = "firstgit-ui"
 
+[build.environment]
+  # ⚠️ Override RENDER_API_URL in Netlify Site settings → Environment variables
+  # Example: https://your-backend.onrender.com
+  RENDER_API_URL = "https://firstgit-api.onrender.com"
+
 [dev]
   # Local development settings
   command = "npm run dev"
@@ -18,20 +23,20 @@
 # Forward all /api/* calls to the backend
 [[redirects]]
   from = "/api/*"
-  to = "https://firstgit-api.onrender.com/api/:splat"
+  to = "${RENDER_API_URL}/api/:splat"
   status = 200
   force = true
 
 # Forward OAuth endpoints to backend
 [[redirects]]
   from = "/oauth2/*"
-  to = "https://firstgit-api.onrender.com/oauth2/:splat"
+  to = "${RENDER_API_URL}/oauth2/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/login/*"
-  to = "https://firstgit-api.onrender.com/login/:splat"
+  to = "${RENDER_API_URL}/login/:splat"
   status = 200
   force = true
 

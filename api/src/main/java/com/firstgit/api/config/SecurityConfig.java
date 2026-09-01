@@ -1,5 +1,6 @@
 package com.firstgit.api.config;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +22,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.firstgit.api.ApiApplication;
+
 import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
@@ -33,7 +36,7 @@ public class SecurityConfig {
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final RateLimitFilter rateLimitFilter;
 
-    private static final List<String> ALLOWED_ORIGINS = List.of(
+    private static final List<String> DEFAULT_ALLOWED_ORIGINS = List.of(
             "http://localhost:5173",
             "http://localhost:4173",
             "https://firstgit-ui.netlify.app",
@@ -45,6 +48,19 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
         this.rateLimitFilter = rateLimitFilter;
+    }
+
+    static List<String> allowedOrigins() {
+        List<String> configured = ApiApplication.parseAllowedOrigins(System.getenv("CORS_ALLOWED_ORIGINS"));
+        if (configured.isEmpty()) {
+            return DEFAULT_ALLOWED_ORIGINS;
+        }
+        List<String> merged = new ArrayList<>(DEFAULT_ALLOWED_ORIGINS.size() + configured.size());
+        merged.addAll(DEFAULT_ALLOWED_ORIGINS);
+        for (String origin : configured) {
+            if (!merged.contains(origin)) merged.add(origin);
+        }
+        return List.copyOf(merged);
     }
 
     @Bean
@@ -142,14 +158,14 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class);
 
-        log.info("Security configuration initialized. Secure cookies: {}", isSecure);
+        log.info("Security configuration initialized. Secure cookies: {}, CORS origins: {}", isSecure, allowedOrigins());
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(ALLOWED_ORIGINS);
+        configuration.setAllowedOrigins(allowedOrigins());
         configuration.setAllowedMethods(Arrays.asList(
                 HttpMethod.GET.name(),
                 HttpMethod.POST.name(),
