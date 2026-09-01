@@ -83,7 +83,7 @@ public class ApiApplication {
         };
     }
 
-    static List<String> parseAllowedOrigins(String raw) {
+    public static List<String> parseAllowedOrigins(String raw) {
         if (raw == null || raw.isBlank()) return List.of();
         return Arrays.stream(raw.split(","))
                 .map(String::trim)
