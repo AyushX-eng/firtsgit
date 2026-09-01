@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from './hooks/useAuth';
 import { deployApi } from './api/client';
 import './App.css';
@@ -25,7 +25,7 @@ const LOADING_STEPS = [
 ];
 
 function App() {
-  const { user, loading: authLoading, isAuthenticated, login, logout, checkAuth } = useAuth();
+  const { user, loading: authLoading, isAuthenticated, login, logout } = useAuth();
   const [selectedFile, setSelectedFile] = useState(null);
   const [repoName, setRepoName] = useState('');
   const [isPrivate, setIsPrivate] = useState(true);
@@ -35,16 +35,6 @@ function App() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [validationError, setValidationError] = useState('');
-
-  // Check auth on mount and when URL has ?auth=success
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('auth') === 'success') {
-      // Clean URL after OAuth redirect
-      window.history.replaceState({}, document.title, window.location.pathname);
-      checkAuth();
-    }
-  }, [checkAuth]);
 
   const validateRepoName = (name) => {
     if (!name || !name.trim()) return 'Repository name is required.';

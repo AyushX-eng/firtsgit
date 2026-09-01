@@ -1,0 +1,43 @@
+# Netlify Configuration for FirstGit UI
+# This file tells Netlify how to build and deploy the frontend
+
+[build]
+  # Build command to create production bundle
+  command = "npm run build"
+  # Directory with production build files
+  publish = "dist"
+  # Base directory for build (monorepo support)
+  base = "firstgit-ui"
+
+[dev]
+  # Local development settings
+  command = "npm run dev"
+  port = 3000
+
+# Redirects for API calls
+# Forward all /api/* calls to the backend
+[[redirects]]
+  from = "/api/*"
+  to = "https://firstgit-api.onrender.com/api/:splat"
+  status = 200
+  force = true
+
+# Forward OAuth endpoints to backend
+[[redirects]]
+  from = "/oauth2/*"
+  to = "https://firstgit-api.onrender.com/oauth2/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/login/*"
+  to = "https://firstgit-api.onrender.com/login/:splat"
+  status = 200
+  force = true
+
+# Single Page Application configuration
+# Redirect all 404s to index.html for React Router
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
