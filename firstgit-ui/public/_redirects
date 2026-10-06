@@ -1,0 +1,22 @@
+# Proxy ALL backend routes through Netlify to the Render FirstGit backend.
+# This ensures cookies (JWT, CSRF, JSESSIONID), SameSite, OAuth state,
+# and CORS are all treated as same-origin (frontend === Netlify origin).
+# DO NOT REMOVE. Order matters: more specific FIRST, SPA fallback LAST.
+
+# Authenticated REST API calls
+/api/*                       https://firtsgit.onrender.com/api/:splat                          200!
+
+# OAuth flow start (Spring Security OAuth2AuthorizationRequestRedirectFilter)
+/oauth2/*                    https://firtsgit.onrender.com/oauth2/:splat                       200!
+
+# OAuth callback from GitHub lands here (Spring Security OAuth2LoginAuthenticationFilter)
+/login/*                     https://firtsgit.onrender.com/login/:splat                        200!
+
+# Logout endpoint (Spring Security logout handler)
+/logout                      https://firtsgit.onrender.com/logout                              200!
+
+# Actuator health endpoint (optional)
+/actuator/*                  https://firtsgit.onrender.com/actuator/:splat                    200!
+
+# SPA fallback (React Router deep links) — ONLY if no redirect above matched.
+/*                           /index.html                                                        200
