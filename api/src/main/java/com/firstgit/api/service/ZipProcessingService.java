@@ -24,9 +24,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import org.kohsuke.github.GHFileNotFoundException;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
@@ -35,6 +32,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Service for processing ZIP file deployments to GitHub.
@@ -63,6 +63,8 @@ public class ZipProcessingService {
             getEnvLong("ZIP_MAX_TOTAL_UNCOMPRESSED_BYTES", 300L * 1024 * 1024);
     private static final long ZIP_MAX_ENTRY_UNCOMPRESSED_BYTES =
             getEnvLong("ZIP_MAX_ENTRY_UNCOMPRESSED_BYTES", 50L * 1024 * 1024);
+    private static final int ZIP_MAX_ENTRIES =
+            getEnvInt("ZIP_MAX_ENTRIES", 10000);
     private static final Pattern REPO_NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_.-]{1,100}$");
 
     private static final ObjectMapper JSON = new ObjectMapper();
@@ -488,6 +490,16 @@ public class ZipProcessingService {
             return "https://x-access-token:***";
         }
         return arg;
+    }
+
+    private static int getEnvInt(String key, int defaultValue) {
+        String raw = System.getenv(key);
+        if (raw == null || raw.isBlank()) return defaultValue;
+        try {
+            return Integer.parseInt(raw.trim());
+        } catch (Exception ignored) {
+            return defaultValue;
+        }
     }
 
     private static long getEnvLong(String key, long defaultValue) {
