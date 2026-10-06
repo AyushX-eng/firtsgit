@@ -55,6 +55,10 @@ public class DeploymentController {
             return ResponseEntity.badRequest().body(new DeployResponse("error", null));
         }
 
+        if (repoName == null || repoName.isBlank() || !repoName.matches("^[a-zA-Z0-9_.-]{1,100}$")) {
+            return ResponseEntity.badRequest().body(new DeployResponse("error", null));
+        }
+
         if (authentication == null) {
             return ResponseEntity.status(401).body(new DeployResponse("error", null));
         }

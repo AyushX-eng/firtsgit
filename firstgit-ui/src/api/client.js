@@ -96,14 +96,18 @@ async function secureFetch(endpoint, options = {}) {
     throw new Error('Access denied. Your session may have expired.');
   }
 
-  let data;
-  try {
-    data = await response.json();
-  } catch (parseError) {
-    if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
+  const contentType = response.headers.get('content-type') || '';
+  let data = null;
+  if (contentType.includes('application/json')) {
+    try {
+      data = await response.json();
+    } catch (parseError) {
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
     }
-    data = null;
+  } else if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`);
   }
 
   if (!response.ok) {

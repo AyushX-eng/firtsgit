@@ -8,7 +8,7 @@ COPY api/mvnw ./mvnw
 COPY api/mvnw.cmd ./mvnw.cmd
 COPY api/.mvn ./.mvn
 COPY api/src ./src
-RUN mvn -DskipTests -q clean package
+RUN chmod +x ./mvnw && ./mvnw -DskipTests -q clean package
 
 # Runtime stage — maintained Eclipse Temurin 17 JRE on Ubuntu 22.04 slim
 FROM eclipse-temurin:17-jre-jammy

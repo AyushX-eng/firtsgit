@@ -20,10 +20,12 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.kohsuke.github.GHFileNotFoundException;
 import org.kohsuke.github.GHRepository;
@@ -61,7 +63,9 @@ public class ZipProcessingService {
             getEnvLong("ZIP_MAX_TOTAL_UNCOMPRESSED_BYTES", 300L * 1024 * 1024);
     private static final long ZIP_MAX_ENTRY_UNCOMPRESSED_BYTES =
             getEnvLong("ZIP_MAX_ENTRY_UNCOMPRESSED_BYTES", 50L * 1024 * 1024);
-    private static final int ZIP_MAX_ENTRIES = (int) getEnvLong("ZIP_MAX_ENTRIES", 10_000);
+    private static final Pattern REPO_NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_.-]{1,100}$");
+
+    private static final ObjectMapper JSON = new ObjectMapper();
 
     /**
      * Main deployment method.
@@ -75,6 +79,11 @@ public class ZipProcessingService {
      * @throws IOException If any I/O or GitHub API error occurs
      */
     public String processAndDeploy(MultipartFile file, String repoName, boolean isPrivate, String githubToken) throws IOException {
+        if (repoName == null || !REPO_NAME_PATTERN.matcher(repoName.trim()).matches()) {
+            throw new IOException("Invalid repository name");
+        }
+        repoName = repoName.trim();
+
         GitHub github = new GitHubBuilder().withOAuthToken(githubToken).build();
         String owner = github.getMyself().getLogin();
 
@@ -334,9 +343,11 @@ public class ZipProcessingService {
             HttpClient http = HttpClient.newHttpClient();
             String url = "https://api.github.com/repos/" + owner + "/" + repoName + "/keys";
             String title = "firstgit-deploy-" + System.currentTimeMillis();
-            String bodyJson = "{\"title\":\"" + title + "\",\"key\":\"" 
-                + pub.replace("\n", "\\n").replace("\"", "\\\"") 
-                + "\",\"read_only\":false}";
+            ObjectNode body = JSON.createObjectNode();
+            body.put("title", title);
+            body.put("key", pub.trim());
+            body.put("read_only", false);
+            String bodyJson = JSON.writeValueAsString(body);
 
             HttpRequest req = HttpRequest.newBuilder()
                     .uri(URI.create(url))
@@ -349,8 +360,10 @@ public class ZipProcessingService {
             HttpResponse<String> resp = http.send(req, HttpResponse.BodyHandlers.ofString());
             int keyId = -1;
             if (resp.statusCode() >= 200 && resp.statusCode() < 300) {
-                Matcher m = Pattern.compile("\"id\"\\s*:\\s*(\\d+)").matcher(resp.body());
-                if (m.find()) keyId = Integer.parseInt(m.group(1));
+                var root = JSON.readTree(resp.body());
+                if (root.has("id")) {
+                    keyId = root.get("id").asInt();
+                }
             }
 
             // Add remote and push with SSH

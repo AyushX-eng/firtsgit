@@ -25,7 +25,7 @@ const LOADING_STEPS = [
 ];
 
 function App() {
-  const { user, loading: authLoading, isAuthenticated, login, logout } = useAuth();
+  const { user, loading: authLoading, error: authError, isAuthenticated, login, logout } = useAuth();
   const [selectedFile, setSelectedFile] = useState(null);
   const [repoName, setRepoName] = useState('');
   const [isPrivate, setIsPrivate] = useState(true);
@@ -86,6 +86,10 @@ function App() {
       const data = await deployApi.deploy(selectedFile, repoName.trim(), isPrivate);
       clearInterval(progressInterval);
 
+      if (!data || data.status !== 'success' || !data.repositoryUrl) {
+        throw new Error(data?.error || 'Deployment failed. Please try again.');
+      }
+
       setDeployProgress('');
       setDeployResult({
         ok: true,
@@ -107,10 +111,16 @@ function App() {
   };
 
   const handleFileSelect = (file) => {
-    if (file) {
-      setSelectedFile(file);
-      setValidationError('');
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith('.zip')) {
+      setSelectedFile(null);
+      setValidationError('Only ZIP files are supported.');
+      setDeployResult({ ok: false, message: 'Only ZIP files are supported.' });
+      return;
     }
+    setSelectedFile(file);
+    setValidationError('');
+    setDeployResult(null);
   };
 
   const handleKeyDown = (e) => {
